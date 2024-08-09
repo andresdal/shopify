@@ -35,9 +35,12 @@ async function readSheet() {
     });
 
     console.log('Filtered Rows:', filteredRows);
+
+    return filteredRows;
   } catch (error) {
     console.error('Error reading sheet data:', error);
   }
 }
 
-readSheet();
+module.exports = { readSheet };
+

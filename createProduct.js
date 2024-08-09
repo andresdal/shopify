@@ -132,26 +132,35 @@ const uploadImagesFromFolder = async (folderPath) => {
   return imageUrls;
 };
 
+const addImagesToProduct = (productJson, imageUrls) => {
+  // Verifica el tipo y la estructura del JSON
+  if (!productJson || typeof productJson !== 'object') {
+      throw new Error('Invalid product JSON: productJson is not an object');
+  }
+  if (!productJson.product) {
+      throw new Error('Invalid product JSON: Missing "product" key');
+  }
+
+  // Verifica que imageUrls sea un array
+  if (!Array.isArray(imageUrls)) {
+      throw new Error('Image URLs should be an array');
+  }
+
+  // Agregar el campo images al JSON del producto
+  productJson.product.images = imageUrls.map(url => ({ src: url }));
+
+  return productJson;
+};
+
 // Función para crear un producto en Shopify
-const createProduct = async (imageUrls) => {
-  const productData = {
-    product: {
-      title: 'Xiaomi 12 Bone Solid color Automatic umbrella Light Collapsible Large size sunshade Uv protection',
-      body_html: 'Xiaomi 12 Bone Solid color Automatic umbrella Light Collapsible Large size sunshade Uv protection',
-      vendor: 'Smile Shop',
-      product_type: 'Umbrella',
-      tags: 'xiaomi, umbrella, collapsible, large size, sunshade, uv protection',
-      variants: [
-        {
-          price: '19.99',
-          sku: 'Xiaomi-umbrella',
-          option1: 'One Size',
-          inventory_quantity: 75
-        }
-      ],
-      images: imageUrls.map(url => ({ src: url })) // Añade las URLs de las imágenes
-    }
-  };
+const createProduct = async (imageUrls, producto_json) => {
+  console.log("images Urls llegaron: " + imageUrls);
+  
+  producto_json = JSON.parse(producto_json);
+
+  let productData = addImagesToProduct(producto_json, imageUrls);
+
+  console.log("Producto JSON con imagenes:", JSON.stringify(productData));
 
   try {
     const response = await axios.post(`https://${shopifyDomain}/admin/api/2024-07/products.json`, productData, {
@@ -165,13 +174,6 @@ const createProduct = async (imageUrls) => {
     return productId;
   } catch (error) {
     logToFile(`Error al crear el producto: ${error}`);
-    throw error;
   }
 };
-
-const folderPath = './temp_product_media'; // Reemplaza con la ruta a tu carpeta de imágenes
-
-// Primero sube las imágenes y luego crea el producto con esas imágenes
-uploadImagesFromFolder(folderPath)
-  .then(imageUrls => createProduct(imageUrls))
-  .catch(error => logToFile(`Error en el script: ${error}`));
+module.exports = { uploadImagesFromFolder, createProduct, logToFile};

@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 const axios = require('axios');
+const { log } = require('console');
 
 const downloadFile = async (url, filePath) => {
     try {
@@ -73,7 +74,27 @@ const downloadMedia = async (url, downloadPath) => {
     }
 };
 
-// Example usage
-const url = 'https://www.aliexpress.us/item/3256806380043412.html?spm=a2g0o.home.pcJustForYou.321.468a76dbxODmO7&gps-id=pcJustForYou&scm=1007.13562.333647.0&scm_id=1007.13562.333647.0&scm-url=1007.13562.333647.0&pvid=372ea3ee-810a-4e92-9771-38d1c4cdf77b&_t=gps-id:pcJustForYou,scm-url:1007.13562.333647.0,pvid:372ea3ee-810a-4e92-9771-38d1c4cdf77b,tpp_buckets:668%232846%238108%231977&pdp_npi=4%40dis%21USD%2124.55%217.05%21%21%21177.62%2150.97%21%402101c71a17223659835588254ef84b%2112000037691562904%21rec%21US%21%21ABX&utparam-url=scene%3ApcJustForYou%7Cquery_from%3A';
-const downloadPath = 'temp_product_media';
-downloadMedia(url, downloadPath);
+function deleteImages(folderPath) {
+    fs.readdir(folderPath, (err, files) => {
+        if (err) {
+            console.error('Error reading folder:', err);
+            return;
+        }
+
+        files.forEach(file => {
+            const filePath = path.join(folderPath, file);
+            const ext = path.extname(file).toLowerCase();
+            if (['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'].includes(ext)) {
+                fs.unlink(filePath, err => {
+                    if (err) {
+                        console.error('Error deleting file:', filePath, err);
+                    } else {
+                        console.log('Deleted file:', filePath);
+                    }
+                });
+            }
+        });
+    });
+}
+
+module.exports = { downloadMedia, deleteImages};
