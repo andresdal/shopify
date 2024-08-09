@@ -138,23 +138,17 @@ const createProduct = async (imageUrls) => {
     product: {
       title: 'Xiaomi 12 Bone Solid color Automatic umbrella Light Collapsible Large size sunshade Uv protection',
       body_html: 'Xiaomi 12 Bone Solid color Automatic umbrella Light Collapsible Large size sunshade Uv protection',
-      vendor: 'Xiaomi',
+      vendor: 'Smile Shop',
       product_type: 'Umbrella',
       tags: 'xiaomi, umbrella, collapsible, large size, sunshade, uv protection',
-      // variants: [
-      //   {
-      //     price: '19.99',
-      //     sku: 'example-shirt-s',
-      //     option1: 'Small',
-      //     inventory_quantity: 75
-      //   },
-      //   {
-      //     price: '19.99',
-      //     sku: 'example-shirt-m',
-      //     option1: 'Medium',
-      //     inventory_quantity: 50
-      //   }
-      // ],
+      variants: [
+        {
+          price: '19.99',
+          sku: 'Xiaomi-umbrella',
+          option1: 'One Size',
+          inventory_quantity: 75
+        }
+      ],
       images: imageUrls.map(url => ({ src: url })) // Añade las URLs de las imágenes
     }
   };
