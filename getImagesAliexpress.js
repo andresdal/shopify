@@ -54,7 +54,7 @@ const downloadMedia = async (url, downloadPath) => {
                 const highResUrl = thumbnailUrl.replace(/\.jpg_\d+x\d+\.jpg_\.webp$/, '.jpg_.webp');
 
                 const fileExtension = path.extname(highResUrl);
-                const fileName = `image-${index + 1}${fileExtension}`;
+                const fileName = path.basename(highResUrl);
                 const filePath = path.join(downloadPath, fileName);
 
                 await downloadFile(highResUrl, filePath);
