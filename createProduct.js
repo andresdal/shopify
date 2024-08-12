@@ -5,8 +5,6 @@ const FormData = require('form-data');
 require('dotenv').config();
 const mime = require('mime-types');
 
-// const shopifyDomain = process.env.SHOPIFY_DOMAIN;
-// const accessToken = process.env.ACCESS_TOKEN;
 const logFilePath = path.join(__dirname, 'script.log');
 
 // Función para escribir en el archivo de log
@@ -76,8 +74,8 @@ const uploadImage = async (imagePath, shopify_domain) => {
   return stagedUpload.resourceUrl;
 };
 
-const createFileInShopify = async (resourceUrl, shopify_token) => {
-  const endpoint = `https://${shopifyDomain}/admin/api/2024-07/graphql.json`;
+const createFileInShopify = async (resourceUrl, shopify_token, shopify_domain) => {
+  const endpoint = `https://${shopify_domain}/admin/api/2024-07/graphql.json`;
   const query = `
     mutation fileCreate($files: [FileCreateInput!]!) {
       fileCreate(files: $files) {
@@ -123,7 +121,7 @@ const uploadImagesFromFolder = async (folderPath, shopify_domain, shopify_token)
     const resourceUrl = await uploadImage(imagePath, shopify_domain, shopify_token);
     console.log(`Image uploaded: ${resourceUrl}`);
 
-    const file = await createFileInShopify(resourceUrl, shopify_token);
+    const file = await createFileInShopify(resourceUrl, shopify_token, shopify_domain);
     console.log(`File created in Shopify: ${JSON.stringify(file)}`);
 
     imageUrls.push(resourceUrl);
