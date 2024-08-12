@@ -54,7 +54,7 @@ const createStagedUploads = async (filename, mimeType, shopify_domain, shopify_t
   return response.data.data.stagedUploadsCreate.stagedTargets[0];
 };
 
-const uploadImage = async (imagePath, shopify_domain) => {
+const uploadImage = async (imagePath, shopify_domain, shopify_token) => {
   const filename = path.basename(imagePath);
   const mimeType = mime.lookup(filename) || 'application/octet-stream';
   const stagedUpload = await createStagedUploads(filename, mimeType, shopify_domain, shopify_token);

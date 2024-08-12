@@ -21,7 +21,6 @@ async function main() {
             const description = await getMetaTagContent(row[1]);
             
             // Generar datos del producto
-            // row[6], row[7], row[8], row[9] por ejemplo, no se cual row es por ahora
             const producto_json = await generateProductData(row[3], description, row[8], row[9]); // precio y precio de comparación
 
             // Subir imágenes y luego crear el producto

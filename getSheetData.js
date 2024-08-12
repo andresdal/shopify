@@ -11,7 +11,7 @@ async function readSheet() {
   const sheets = google.sheets({ version: 'v4', auth: client });
 
   const spreadsheetId = '1DyZqxjidx-XXASj3ykhg44ZNOIXnpgCvcHJ9eIE4qV0';
-  const range = 'Product Finds!C:L'; // Rango de columnas C a H
+  const range = 'Product Finds!C:L'; // Rango de columnas C a L
 
   try {
     const response = await sheets.spreadsheets.values.get({
@@ -30,7 +30,7 @@ async function readSheet() {
     const filteredRows = rows.filter(row => {
       // Verificar si el status en la columna E (índice 2) es TRUE
       if (row[2] !== 'TRUE') return false;
-      // Verificar si todas las columnas desde C a H están completas
+      // Verificar si todas las columnas desde C a L están completas
       return row.every((cell, index) => index >= 0 && cell !== undefined && cell !== null && cell.trim() !== '');
     });
 
