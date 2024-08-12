@@ -74,43 +74,6 @@ const uploadImage = async (imagePath, shopify_domain, shopify_token) => {
   return stagedUpload.resourceUrl;
 };
 
-const createFileInShopify = async (resourceUrl, shopify_token, shopify_domain) => {
-  const endpoint = `https://${shopify_domain}/admin/api/2024-07/graphql.json`;
-  const query = `
-    mutation fileCreate($files: [FileCreateInput!]!) {
-      fileCreate(files: $files) {
-        files {
-          id
-          fileStatus
-          alt
-          createdAt
-        }
-      }
-    }
-  `;
-  const variables = {
-    files: [
-      {
-        alt: 'fallback text for an image',
-        contentType: 'IMAGE',
-        originalSource: resourceUrl
-      }
-    ]
-  };
-
-  const response = await axios.post(endpoint, {
-    query,
-    variables
-  }, {
-    headers: {
-      'X-Shopify-Access-Token': shopify_token,
-      'Content-Type': 'application/json'
-    }
-  });
-
-  return response.data.data.fileCreate.files[0];
-};
-
 // Función para subir todas las imágenes desde una carpeta
 const uploadImagesFromFolder = async (folderPath, shopify_domain, shopify_token) => {
   const files = fs.readdirSync(folderPath);
@@ -120,9 +83,6 @@ const uploadImagesFromFolder = async (folderPath, shopify_domain, shopify_token)
   for (const imagePath of imagePaths) {
     const resourceUrl = await uploadImage(imagePath, shopify_domain, shopify_token);
     console.log(`Image uploaded: ${resourceUrl}`);
-
-    const file = await createFileInShopify(resourceUrl, shopify_token, shopify_domain);
-    console.log(`File created in Shopify: ${JSON.stringify(file)}`);
 
     imageUrls.push(resourceUrl);
   }

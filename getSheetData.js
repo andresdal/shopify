@@ -26,12 +26,19 @@ async function readSheet() {
       return;
     }
 
-    // Filtrar filas donde el status (E) = TRUE y todos los campos están completos
+    // Filtrar filas donde el status (E) = TRUE y todos los campos desde C a L están completos
     const filteredRows = rows.filter(row => {
       // Verificar si el status en la columna E (índice 2) es TRUE
       if (row[2] !== 'TRUE') return false;
+
       // Verificar si todas las columnas desde C a L están completas
-      return row.every((cell, index) => index >= 0 && cell !== undefined && cell !== null && cell.trim() !== '');
+      for (let i = 0; i < 9; i++) { // 9 columnas desde C a L
+        if (!row[i] || row[i].trim() === '') {
+          return false;
+        }
+      }
+
+      return true;
     });
 
     console.log('Filtered Rows:', filteredRows);
