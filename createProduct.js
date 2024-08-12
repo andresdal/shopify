@@ -5,8 +5,8 @@ const FormData = require('form-data');
 require('dotenv').config();
 const mime = require('mime-types');
 
-const shopifyDomain = process.env.SHOPIFY_DOMAIN;
-const accessToken = process.env.ACCESS_TOKEN;
+// const shopifyDomain = process.env.SHOPIFY_DOMAIN;
+// const accessToken = process.env.ACCESS_TOKEN;
 const logFilePath = path.join(__dirname, 'script.log');
 
 // Función para escribir en el archivo de log
@@ -16,8 +16,8 @@ const logToFile = (message) => {
 
 
 // Función para subir una imagen a Shopify
-const createStagedUploads = async (filename, mimeType) => {
-  const endpoint = `https://${shopifyDomain}/admin/api/2024-07/graphql.json`;
+const createStagedUploads = async (filename, mimeType, shopify_domain, shopify_token) => {
+  const endpoint = `https://${shopify_domain}/admin/api/2024-07/graphql.json`;
   const query = `
     mutation stagedUploadsCreate($input: [StagedUploadInput!]!) {
       stagedUploadsCreate(input: $input) {
@@ -48,7 +48,7 @@ const createStagedUploads = async (filename, mimeType) => {
     variables
   }, {
     headers: {
-      'X-Shopify-Access-Token': accessToken,
+      'X-Shopify-Access-Token': shopify_token,
       'Content-Type': 'application/json'
     }
   });
@@ -56,10 +56,10 @@ const createStagedUploads = async (filename, mimeType) => {
   return response.data.data.stagedUploadsCreate.stagedTargets[0];
 };
 
-const uploadImage = async (imagePath) => {
+const uploadImage = async (imagePath, shopify_domain) => {
   const filename = path.basename(imagePath);
   const mimeType = mime.lookup(filename) || 'application/octet-stream';
-  const stagedUpload = await createStagedUploads(filename, mimeType);
+  const stagedUpload = await createStagedUploads(filename, mimeType, shopify_domain, shopify_token);
 
   const form = new FormData();
   stagedUpload.parameters.forEach(param => {
@@ -76,7 +76,7 @@ const uploadImage = async (imagePath) => {
   return stagedUpload.resourceUrl;
 };
 
-const createFileInShopify = async (resourceUrl) => {
+const createFileInShopify = async (resourceUrl, shopify_token) => {
   const endpoint = `https://${shopifyDomain}/admin/api/2024-07/graphql.json`;
   const query = `
     mutation fileCreate($files: [FileCreateInput!]!) {
@@ -105,7 +105,7 @@ const createFileInShopify = async (resourceUrl) => {
     variables
   }, {
     headers: {
-      'X-Shopify-Access-Token': accessToken,
+      'X-Shopify-Access-Token': shopify_token,
       'Content-Type': 'application/json'
     }
   });
@@ -114,16 +114,16 @@ const createFileInShopify = async (resourceUrl) => {
 };
 
 // Función para subir todas las imágenes desde una carpeta
-const uploadImagesFromFolder = async (folderPath) => {
+const uploadImagesFromFolder = async (folderPath, shopify_domain, shopify_token) => {
   const files = fs.readdirSync(folderPath);
   const imagePaths = files.map(file => path.join(folderPath, file));
   
   const imageUrls = [];
   for (const imagePath of imagePaths) {
-    const resourceUrl = await uploadImage(imagePath);
+    const resourceUrl = await uploadImage(imagePath, shopify_domain, shopify_token);
     console.log(`Image uploaded: ${resourceUrl}`);
 
-    const file = await createFileInShopify(resourceUrl);
+    const file = await createFileInShopify(resourceUrl, shopify_token);
     console.log(`File created in Shopify: ${JSON.stringify(file)}`);
 
     imageUrls.push(resourceUrl);
@@ -153,7 +153,7 @@ const addImagesToProduct = (productJson, imageUrls) => {
 };
 
 // Función para crear un producto en Shopify
-const createProduct = async (imageUrls, producto_json) => {
+const createProduct = async (imageUrls, producto_json, shopify_domain, shopify_token) => {
   console.log("images Urls llegaron: " + imageUrls);
   
   producto_json = JSON.parse(producto_json);
@@ -163,10 +163,10 @@ const createProduct = async (imageUrls, producto_json) => {
   console.log("Producto JSON con imagenes:", JSON.stringify(productData));
 
   try {
-    const response = await axios.post(`https://${shopifyDomain}/admin/api/2024-07/products.json`, productData, {
+    const response = await axios.post(`https://${shopify_domain}/admin/api/2024-07/products.json`, productData, {
       headers: {
         'Content-Type': 'application/json',
-        'X-Shopify-Access-Token': accessToken
+        'X-Shopify-Access-Token': shopify_token
       }
     });
     const productId = response.data.product.id;

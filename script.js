@@ -21,12 +21,13 @@ async function main() {
             const description = await getMetaTagContent(row[1]);
             
             // Generar datos del producto
-            const producto_json = await generateProductData(row[3], description);
+            // row[6], row[7], row[8], row[9] por ejemplo, no se cual row es por ahora
+            const producto_json = await generateProductData(row[3], description, row[8], row[9]); // precio y precio de comparación
 
             // Subir imágenes y luego crear el producto
-            const imageUrls = await uploadImagesFromFolder(folderPath);
+            const imageUrls = await uploadImagesFromFolder(folderPath, row[6], row[7]); // row[6] y row[7] son el dominio y el token de Shopify
             console.log("imageUrls: ", imageUrls);
-            await createProduct(imageUrls, producto_json);
+            await createProduct(imageUrls, producto_json, row[6], row[7]); // row[6] y row[7] son el dominio y el token de Shopify
 
         } catch (error) {
             // Registrar errores
