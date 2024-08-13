@@ -8,7 +8,6 @@ async function main() {
     const folderPath = './temp_product_media';
 
     const filteredRows = await readSheet();
-    //console.log("filteredRows:" + filteredRows);
 
     for (const row of filteredRows) {
         console.log("row:", row);
@@ -35,9 +34,6 @@ async function main() {
 
         // Eliminar imágenes después de crear el producto
         deleteImages(folderPath);
-        
-        // Terminar el bucle después de la primera iteración para pruebas
-        break;
     }
 }
 

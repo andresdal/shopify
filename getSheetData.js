@@ -11,7 +11,7 @@ async function readSheet() {
   const sheets = google.sheets({ version: 'v4', auth: client });
 
   const spreadsheetId = '1DyZqxjidx-XXASj3ykhg44ZNOIXnpgCvcHJ9eIE4qV0';
-  const range = 'Product Finds!C:L'; // Rango de columnas C a L
+  const range = 'Shopify Automation!C:L'; // Rango de columnas C a L
 
   try {
     const response = await sheets.spreadsheets.values.get({
