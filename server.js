@@ -7,7 +7,7 @@ const socketIo = require('socket.io');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
-const port = 3000;
+const port = 3001;
 
 // Servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
