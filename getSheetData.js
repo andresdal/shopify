@@ -1,6 +1,8 @@
 const { google } = require('googleapis');
 const path = require('path');
 
+const spreadsheetId = '1DyZqxjidx-XXASj3ykhg44ZNOIXnpgCvcHJ9eIE4qV0';
+
 async function readSheet() {
   const auth = new google.auth.GoogleAuth({
     keyFile: path.join(__dirname, './credentials.json'),
@@ -10,8 +12,7 @@ async function readSheet() {
   const client = await auth.getClient();
   const sheets = google.sheets({ version: 'v4', auth: client });
 
-  const spreadsheetId = '1DyZqxjidx-XXASj3ykhg44ZNOIXnpgCvcHJ9eIE4qV0';
-  const range = 'Shopify Automation!C:L'; // Rango de columnas C a L
+  const range = 'Shopify Automation!A:J';
 
   try {
     const response = await sheets.spreadsheets.values.get({
@@ -28,17 +29,7 @@ async function readSheet() {
 
     // Filtrar filas donde el status (E) = TRUE y todos los campos desde C a L están completos
     const filteredRows = rows.filter(row => {
-      // Verificar si el status en la columna E (índice 2) es TRUE
-      if (row[2] !== 'TRUE') return false;
-
-      // Verificar si todas las columnas desde C a L están completas
-      for (let i = 0; i < 9; i++) { // 9 columnas desde C a L
-        if (!row[i] || row[i].trim() === '') {
-          return false;
-        }
-      }
-
-      return true;
+      return row[9] === 'FALSE';
     });
 
     console.log('Filtered Rows:', filteredRows);
@@ -49,5 +40,33 @@ async function readSheet() {
   }
 }
 
-module.exports = { readSheet };
+async function writeToSheet(rowIndex, colIndex, value) {
+  const auth = new google.auth.GoogleAuth({
+    keyFile: path.join(__dirname, './credentials.json'),
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  });
+  const client = await auth.getClient();
+  const sheets = google.sheets({ version: 'v4', auth: client });
+
+  const booleanValue = value === 'TRUE' ? true : (value === 'FALSE' ? false : value);
+
+  const range = `Shopify Automation!${String.fromCharCode(64 + colIndex)}${rowIndex}`;
+  const request = {
+    spreadsheetId,
+    range,
+    valueInputOption: 'RAW',
+    resource: {
+      values: [[booleanValue]],
+    },
+  };
+
+  try {
+    await sheets.spreadsheets.values.update(request);
+    console.log(`Successfully wrote ${value} to ${range}`);
+  } catch (error) {
+    console.error('Error writing to sheet:', error);
+  }
+}
+
+module.exports = { readSheet, writeToSheet };
 

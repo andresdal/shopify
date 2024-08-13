@@ -2,7 +2,7 @@ const { downloadMedia, deleteImages } = require('./getImagesAliexpress.js');
 const { getMetaTagContent } = require('./getAliexpressTitle.js');
 const { generateProductData } = require('./getChatGPTDesc.js');
 const { uploadImagesFromFolder, createProduct, logToFile } = require('./createProduct.js');
-const { readSheet } = require('./getSheetData.js');
+const { readSheet, writeToSheet } = require('./getSheetData.js');
 
 async function main() {
     const folderPath = './temp_product_media';
@@ -20,12 +20,15 @@ async function main() {
             const description = await getMetaTagContent(row[1]);
             
             // Generar datos del producto
-            const producto_json = await generateProductData(row[3], description, row[8], row[9]); // precio y precio de comparación
+            const producto_json = await generateProductData(row[2], description, row[7], row[8]); // precio y precio de comparación
 
             // Subir imágenes y luego crear el producto
-            const imageUrls = await uploadImagesFromFolder(folderPath, row[6], row[7]); // row[6] y row[7] son el dominio y el token de Shopify
+            const imageUrls = await uploadImagesFromFolder(folderPath, row[5], row[6]); // dominio y el token de Shopify
             console.log("imageUrls: ", imageUrls);
-            await createProduct(imageUrls, producto_json, row[6], row[7]); // row[6] y row[7] son el dominio y el token de Shopify
+
+            await createProduct(imageUrls, producto_json, row[5], row[6]); // dominio y el token de Shopify
+
+            await writeToSheet(parseInt(row[0]) + 1, 10, 'TRUE');
 
         } catch (error) {
             // Registrar errores
@@ -34,6 +37,8 @@ async function main() {
 
         // Eliminar imágenes después de crear el producto
         deleteImages(folderPath);
+
+        break;
     }
 }
 
