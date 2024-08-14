@@ -42,8 +42,6 @@ async function main() {
 
         // Eliminar imágenes después de crear el producto
         deleteImages(folderPath);
-
-        break;
     }
 }
 
