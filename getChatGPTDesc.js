@@ -40,6 +40,7 @@ async function generateProductData(language, description, price, compare_at_pric
     <p>Παραγγείλετε τώρα και επωφεληθείτε από μια ειδική έκπτωση! Μην χάσετε αυτή την ευκαιρία να βελτιώσετε την άνεση του σπιτιού σας.</p>. 
     Create a compelling product description based on the information below, including an innovative product name. The structure should be: Title, a description of about 300 characters, up to 5 bullet points with different emojis, and a CTA to order now with a special discount. The result should be ready to copy and paste, with no extra titles. Do not include emojis in the title. 
     All the output text should be in language ${language}, including the title.
+    The price must be ${price} and the compare_at_price must be ${compare_at_price}.
     dont add the \`\`\`json\`\`\`, just give me the plain text`
     }
     ];

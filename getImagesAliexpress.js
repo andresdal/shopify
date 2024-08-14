@@ -54,7 +54,8 @@ const downloadMedia = async (url, downloadPath) => {
         for (const [index, thumbnailUrl] of thumbnailUrls.entries()) {
             try {
                 // Construct the high-resolution image URL from the thumbnail URL
-                const highResUrl = thumbnailUrl.replace(/\.jpg_\d+x\d+\.jpg_\.webp$/, '.jpg_.webp');
+                var highResUrl = thumbnailUrl.replace(/\.jpg_\d+x\d+\.jpg_\.webp$/, '.jpg_.webp');
+                highResUrl = highResUrl.replace(/\.png_\d+x\d+\.png_\.webp$/, '.png_.webp');
 
                 const fileExtension = path.extname(highResUrl);
                 const fileName = path.basename(highResUrl);
