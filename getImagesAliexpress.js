@@ -23,38 +23,37 @@ const downloadMedia = async (url, downloadPath) => {
         fs.mkdirSync(downloadPath, { recursive: true });
     }
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
     const page = await browser.newPage();
 
     try {
-        console.log('Navigating to:', url);
         await page.goto(url, { waitUntil: 'networkidle2' });
 
-        console.log('Waiting for selector .slider--img--K0YbWW2 img');
+        // Wait for all the thumbnail images to be loaded
         await page.waitForSelector('.slider--img--K0YbWW2 img');
 
+        // Scroll through the slider to load all the thumbnails
         const thumbnailCount = await page.$$eval('.slider--img--K0YbWW2 img', imgs => imgs.length);
-        console.log('Thumbnail count:', thumbnailCount);
-
         for (let i = 0; i < Math.ceil(thumbnailCount / 6); i++) {
-            console.log('Scrolling...');
             await page.evaluate(() => {
                 window.scrollBy(0, window.innerHeight);
             });
             await new Promise(resolve => setTimeout(resolve, 500));
         }
 
+        // Obtain all the thumbnail URLs
         const thumbnailUrls = await page.$$eval('.slider--img--K0YbWW2 img', imgs =>
             imgs.map(img => img.src)
         );
-        console.log('Thumbnail URLs:', thumbnailUrls);
 
         let downloadedCount = 0;
         const totalCount = thumbnailUrls.length;
 
         for (const [index, thumbnailUrl] of thumbnailUrls.entries()) {
             try {
-                console.log(`Processing URL ${index + 1}/${totalCount}: ${thumbnailUrl}`);
+                // Construct the high-resolution image URL from the thumbnail URL
                 const highResUrl = thumbnailUrl.replace(/\.jpg_\d+x\d+\.jpg_\.webp$/, '.jpg_.webp');
 
                 const fileExtension = path.extname(highResUrl);
@@ -76,7 +75,6 @@ const downloadMedia = async (url, downloadPath) => {
         await browser.close();
     }
 };
-
 
 function deleteImages(folderPath) {
     fs.readdir(folderPath, (err, files) => {
