@@ -28,8 +28,15 @@ async function readSheet() {
     }
 
     // Filtrar filas donde el status (E) = TRUE y todos los campos desde C a L están completos
-    const filteredRows = rows.filter(row => {
-      return row[9] === 'FALSE';
+    const filteredRows = rows.slice(1).filter(row => {
+      if(row[9] === 'TRUE') return false;
+
+      for (let i = 1; i <= 8; i++) {
+        if (row[i] === '') {
+          return false;
+        }
+      }
+      return true;
     });
 
     console.log('Filtered Rows:', filteredRows);
@@ -69,4 +76,3 @@ async function writeToSheet(rowIndex, colIndex, value) {
 }
 
 module.exports = { readSheet, writeToSheet };
-

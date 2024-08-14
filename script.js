@@ -9,6 +9,11 @@ async function main() {
 
     const filteredRows = await readSheet();
 
+    if(!filteredRows || filteredRows.length === 0) {
+        console.log('No hay productos nuevos para subir.');
+        return;
+    }
+
     for (const row of filteredRows) {
         console.log("row:", row);
 
