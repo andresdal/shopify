@@ -143,7 +143,7 @@ const downloadReviewImages = async (url, downloadPath) => {
             }).filter(Boolean); // Elimina valores nulos
         });
 
-        console.log('Primeras imágenes de cada reseña:', reviewImages);
+        // console.log('Primeras imágenes de cada reseña:', reviewImages);
 
         let downloadedCount = 0;
         const totalCount = reviewImages.length;
@@ -172,4 +172,4 @@ const downloadReviewImages = async (url, downloadPath) => {
     }
 };
 
-module.exports = { downloadMedia, deleteImages};
+module.exports = { downloadMedia, deleteImages, downloadReviewImages};

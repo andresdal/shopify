@@ -39,7 +39,7 @@ async function readSheet() {
       return true;
     });
 
-    console.log('Filtered Rows:', filteredRows);
+    // console.log('Filtered Rows:', filteredRows);
 
     return filteredRows;
   } catch (error) {

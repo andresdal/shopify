@@ -112,13 +112,13 @@ const addImagesToProduct = (productJson, imageUrls) => {
 
 // Función para crear un producto en Shopify
 const createProduct = async (imageUrls, producto_json, shopify_domain, shopify_token) => {
-  console.log("images Urls llegaron: " + imageUrls);
+  //console.log("images Urls llegaron: " + imageUrls);
   
   producto_json = JSON.parse(producto_json);
 
   let productData = addImagesToProduct(producto_json, imageUrls);
 
-  console.log("Producto JSON con imagenes:", JSON.stringify(productData));
+  // console.log("Producto JSON con imagenes:", JSON.stringify(productData));
 
   try {
     const response = await axios.post(`https://${shopify_domain}/admin/api/2024-07/products.json`, productData, {
@@ -129,7 +129,7 @@ const createProduct = async (imageUrls, producto_json, shopify_domain, shopify_t
     });
     const productId = response.data.product.id;
     logToFile(`Producto creado con ID: ${productId}`);
-    return productId;
+    return [response.data.product.title, response.data.product.handle];
   } catch (error) {
     logToFile(`Error al crear el producto: ${error}`);
   }

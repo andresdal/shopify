@@ -7,6 +7,7 @@ async function getMetaTagContent(url) {
     options.addArguments('--no-sandbox');
     options.addArguments('--disable-dev-shm-usage');
     options.addArguments('--disable-gpu');
+    options.addArguments('--log-level=3');
 
     let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
     try {
