@@ -173,7 +173,7 @@ async function generateProductReviews(product_handle, language, country, product
 
       if (!fs.existsSync('./csv_files')) {
         fs.mkdirSync('./csv_files', { recursive: true });
-    }
+      }
 
       const filePath = path.join(__dirname, './csv_files', fileName);
 
@@ -187,6 +187,7 @@ async function generateProductReviews(product_handle, language, country, product
       });
 
       console.log("Product reviews generated successfully.");
+      return;
     } catch (error) {
       attempt++;
       console.error(`Error generating product review data, attempt ${attempt}:`, error);
