@@ -39,6 +39,9 @@ RUN apt-get update && apt-get install -y \
     libfontconfig1 \
     libgbm-dev
 
+# Crear carpetas con permisos
+RUN mkdir -p /temp_review_imgs /unified_csv_files /csv_files && \
+    chmod 777 /temp_review_imgs /unified_csv_files /csv_files
 
 # Copia el resto del código
 COPY . .
