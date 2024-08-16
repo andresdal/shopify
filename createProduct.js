@@ -128,6 +128,7 @@ const createProduct = async (imageUrls, producto_json, shopify_domain, shopify_t
       }
     });
     const productId = response.data.product.id;
+    console.log(`Producto creado con ID: ${productId}`);
     logToFile(`Producto creado con ID: ${productId}`);
     return [response.data.product.title, response.data.product.handle];
   } catch (error) {

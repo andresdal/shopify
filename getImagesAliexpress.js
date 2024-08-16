@@ -54,8 +54,8 @@ const downloadMedia = async (url, downloadPath) => {
         for (const [index, thumbnailUrl] of thumbnailUrls.entries()) {
             try {
                 // Construct the high-resolution image URL from the thumbnail URL
-                var highResUrl = thumbnailUrl.replace(/\.jpg_\d+x\d+\.jpg_\.webp$/, '.jpg_.webp');
-                highResUrl = highResUrl.replace(/\.png_\d+x\d+\.png_\.webp$/, '.png_.webp');
+                var highResUrl = thumbnailUrl.replace(/\.jpg_\d+x\d+\.jpg_\.webp$/, '.jpg');
+                highResUrl = highResUrl.replace(/\.png_\d+x\d+\.png_\.webp$/, '.png');
 
                 const fileExtension = path.extname(highResUrl);
                 const fileName = path.basename(highResUrl);
@@ -115,7 +115,7 @@ const downloadReviewImages = async (url, downloadPath) => {
 
         // Wait for the "Pic review" button and click it
         try {
-            await page.waitForSelector('.filter--filterItem--WGNBYnm', { timeout: 5000 });
+            await page.waitForSelector('.filter--filterItem--WGNBYnm', { timeout: 10000 });
         } catch (error) {
             console.error('No "Pic review" button found:', error.message);
             return;
@@ -152,7 +152,7 @@ const downloadReviewImages = async (url, downloadPath) => {
         for (let imgUrl of reviewImages) {
             try {
                 // Adjust the image URL to high resolution
-                const highResUrl = imgUrl.replace(/\.jpg_\d+x\d+\.jpg_\.webp$/, '.jpg_.webp').replace(/\.png_\d+x\d+\.png_\.webp$/, '.png_.webp');
+                const highResUrl = imgUrl.replace(/\.jpg_\d+x\d+\.jpg_\.webp$/, '.jpg').replace(/\.png_\d+x\d+\.png_\.webp$/, '.png');
                 const fileName = path.basename(highResUrl);
                 const filePath = path.join(downloadPath, fileName);
 

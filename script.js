@@ -3,8 +3,20 @@ const { getMetaTagContent } = require('./getAliexpressTitle.js');
 const { generateProductData, generateProductReviews } = require('./getChatGPTDesc.js');
 const { uploadImagesFromFolder, createProduct, logToFile } = require('./createProduct.js');
 const { readSheet, writeToSheet } = require('./getSheetData.js');
+const fs = require('fs');
+const { unifyCSVFiles } = require('./unificar_csv.js');
 
 async function main() {
+
+    // Delete all files in csv_files folder
+    fs.readdirSync('./csv_files').forEach(file => {
+        fs.unlinkSync(`./csv_files/${file}`);
+    });
+
+    fs.readdirSync('./unified_csv_files').forEach(file => {
+        fs.unlinkSync(`./unified_csv_files/${file}`);
+    });
+
     const folderPath = './temp_product_media';
 
     const filteredRows = await readSheet();
@@ -15,7 +27,7 @@ async function main() {
     }
 
     for (const row of filteredRows) {
-        console.log("Creando producto nro ", row[0]);
+        console.log("Creando producto nro", row[0]);
 
         try {
             // Descargar medios y esperar a que termine
@@ -40,11 +52,9 @@ async function main() {
             let review_images = await uploadImagesFromFolder("./temp_review_imgs", row[5], row[6]);
 
             // Generar reseñas del producto
-            await generateProductReviews(product_handle, row[2], row[3], product_title, review_images);
+            await generateProductReviews(product_handle, row[2], row[3], product_title, review_images, row[5]);
 
             await writeToSheet(parseInt(row[0]) + 1, 10, 'TRUE');
-
-            break;
 
         } catch (error) {
             // Registrar errores
@@ -55,6 +65,7 @@ async function main() {
         deleteImages(folderPath);
         deleteImages("./temp_review_imgs");
     }
+    unifyCSVFiles();
 }
 
 main()
