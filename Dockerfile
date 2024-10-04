@@ -40,8 +40,8 @@ RUN apt-get update && apt-get install -y \
     libgbm-dev
 
 # Crear carpetas con permisos
-RUN mkdir -p /temp_review_imgs /unified_csv_files /csv_files && \
-    chmod 777 /temp_review_imgs /unified_csv_files /csv_files
+RUN mkdir -p /app/temp_review_imgs /app/unified_csv_files /app/csv_files && \
+    chmod 777 /app/temp_review_imgs /app/unified_csv_files /app/csv_files
 
 # Copia el resto del código
 COPY . .
