@@ -243,7 +243,13 @@ const downloadReviewImages = async (url, downloadPath) => {
         await page.goto(url);
 
         // Wait for the element with the specified ID to be visible
-        await page.waitForSelector('._Y3Itb_cr-carousel-heading_1JAfE');
+        try{
+            await page.waitForSelector('._Y3Itb_cr-carousel-heading_1JAfE');
+        }
+        catch (error) {
+            console.error('Not found review images:', error.message);
+            return;
+        }
 
         // Extract image URLs and reviewer IDs
         const images = await page.$$eval('._Y3Itb_cr-carousel-heading_1JAfE + .a-row.a-carousel-controls.a-carousel-row.a-carousel-has-buttons.a-carousel-overlay-buttons .a-carousel-row-inner .a-carousel-col.a-carousel-center .a-carousel-viewport .a-carousel .a-carousel-card ._Y3Itb_media-thumbnail-container_2MRZY', items => {
