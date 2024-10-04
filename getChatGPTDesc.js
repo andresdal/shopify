@@ -182,10 +182,6 @@ async function generateProductReviews(product_handle, language, country, product
 
       const filePath = path.join(__dirname, './csv_files', fileName);
 
-      if (!fs.existsSync(filePath)) {
-        fs.mkdirSync(filePath, { recursive: true });
-      }
-
       // Escribir el archivo CSV
       fs.writeFile(filePath, csvData.trim(), (err) => {
           if (err) {
