@@ -12,6 +12,10 @@ const port = 3001;
 
 const unifiedCSVDirectory = path.join(__dirname, 'unified_csv_files');
 
+if (!fs.existsSync(unifiedCSVDirectory)) {
+  fs.mkdirSync(unifiedCSVDirectory, { recursive: true });
+}
+
 // Servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 

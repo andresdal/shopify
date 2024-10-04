@@ -46,6 +46,9 @@ async function main() {
             let [product_title, product_handle] = await createProduct(imageUrls, producto_json, row[5], row[6]); // dominio y el token de Shopify
 
             // Obtener imagenes de resenias
+            if (!fs.existsSync("./temp_review_imgs")) {
+                fs.mkdirSync("./temp_review_imgs", { recursive: true });
+              }
             await downloadReviewImages(row[1], "./temp_review_imgs");
 
             // Subir imagenes de resenias
