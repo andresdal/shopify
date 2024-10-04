@@ -45,6 +45,10 @@ async function generateProductData(language, description, price, compare_at_pric
       <li>🔌 Συμβατότητα AC85-265V για ευέλικτη εγκατάσταση</li>
       </ul>
       <p>Παραγγείλετε τώρα και επωφεληθείτε από μια ειδική έκπτωση! Μην χάσετε αυτή την ευκαιρία να βελτιώσετε την άνεση του σπιτιού σας.</p>. 
+      
+      Don't forget to include the <p style="text-align: center;"><img src="https://cdn.shopify.com/s/files/1/0661/8864/0441/files/newone.svg?v=1721098019" alt="" width="356" height="35" style="display: block; margin-left: auto; margin-right: auto;" data-mce-src="https://cdn.shopify.com/s/files/1/0661/8864/0441/files/newone.svg?v=1721098019"><strong></strong></p>
+  <p><strong><img alt="" src="https://cdn.shopify.com/s/files/1/0836/6918/8941/files/fhipinng.png" width="351" height="73" style="display: block; margin-left: auto; margin-right: auto;"></strong></p> in the description.
+
       Create a compelling product description based on the information below, including an innovative product name. The structure should be: Title, a description of about 300 characters, up to 5 bullet points with different emojis, and a CTA to order now with a special discount. The result should be ready to copy and paste, with no extra titles. Do not include emojis in the title. 
       All the output text should be in language ${language}, including the title.
       The price must be ${price} and the compare_at_price must be ${compare_at_price}.
@@ -66,6 +70,7 @@ async function generateProductData(language, description, price, compare_at_pric
       const completionText = response.data.choices[0].message.content;
       // console.log('Generated Output:', completionText);
       console.log("Product data generated successfully.");
+      //console.log("Product data:", completionText);
       return completionText;
     } catch (error) {
       attempt++;
